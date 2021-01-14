@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/welcome', function () {
     return view('welcome');
 });
+
+//認証に必要なルーティング定義
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+//コントローラーで利用するためnameメソッドをチェーン
+Route::get('/', 'ItemController@index')->name('item');
