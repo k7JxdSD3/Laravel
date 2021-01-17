@@ -3,11 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+//Itemモデルを呼び出す
+use App\Model\Item;
 
 class ItemController extends Controller {
+
 	public function index() {
-		$var = 'You never fail until you stop trying.';
-		//変数をviewへ渡す
-		return view('item.index', ['var' => $var]);
+		$items = Item::all();
+		return view('item.index', compact('items'));
+	}
+
+	public function detail($id) {
+		$item = Item::where('id', $id)->first();
+		if (isset($item)) {
+			return view('item.detail', compact('item'));
+		} else {
+			//DBに値が存在しない場合は前のページに戻す
+			return back();
+		}
 	}
 }

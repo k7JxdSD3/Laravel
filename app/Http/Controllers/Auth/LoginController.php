@@ -36,4 +36,27 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+	public function redirectToTwitterProvider() {
+		return Socialite::driver('twitter')->redirect();
+	}
+
+	public function handleTwitterProviderCalback() {
+		try {
+			$user = Socialite::with('twitter')->user();
+		} catch (\Exception $e) {
+			// エラーならログイン画面へ転送
+			return redirect('/login')->with('oauth_error', 'ログインに失敗しました');
+		}
+		//DBにデータ挿入
+		//$myinfo = User::firstOrCreate(
+		//	//入れるレコードの指定
+		//	['token' => $user->token],
+		//	//新しく入れる値
+		//	['name' => $user->nickname, 'email' => $user->getEmail()]
+		//);
+		//Auth::login($myinfo);
+		\Debugber::info($user);
+		return redirect()->to('/');
+	}
 }
