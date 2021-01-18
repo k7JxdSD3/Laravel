@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Exception;
+//Auth Login
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -66,4 +68,16 @@ class Handler extends ExceptionHandler
         	return parent::render($request, $exception);
 		}
     }
+	//認証していない場合にガードをみてそれぞれのログインページに飛ばす
+	public function unauthenticated($request, AuthenticationException $exception)
+	{
+		if ($request->exceptsJson()) {
+			return response()->json(['message' => $exception->getMessage()], 401);
+		}
+
+		if (in_array('admin', $exception->guards())) {
+			return redirect()->guest(route('admin.login'));
+		}
+		return redirect()->guest(route('login'));
+	}
 }

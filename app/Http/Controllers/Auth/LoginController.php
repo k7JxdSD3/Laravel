@@ -37,6 +37,11 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+/*
+|--------------------------------------------------------------------------
+| twitter Login
+|--------------------------------------------------------------------------
+ */
 	public function redirectToTwitterProvider() {
 		return Socialite::driver('twitter')->redirect();
 	}
@@ -59,4 +64,9 @@ class LoginController extends Controller
 		\Debugber::info($user);
 		return redirect()->to('/');
 	}
+/*
+|--------------------------------------------------------------------------
+|
+|--------------------------------------------------------------------------
+ */
 }
