@@ -1,6 +1,7 @@
 <?php
+use Illuminate\Support\Str;
 
-return [
+$configure = [
 
     /*
     |--------------------------------------------------------------------------
@@ -195,3 +196,20 @@ return [
     'same_site' => null,
 
 ];
+    /*
+    |--------------------------------------------------------------------------
+    | Make Admin Session
+    |--------------------------------------------------------------------------
+    |管理画面のセッションクッキーを変更する
+    |
+    */
+$uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+//管理画面のURLかどうか判断
+if (strpos($uri, '/admin/') === 0 || $uri === '/admin') {
+	$configure['cookie'] = env(
+		'SESSION_COOKIE_ADMIN',
+		Str::slug(env('APP_NAME', 'laravel'), '_') . '_admin_session'
+	);
+}
+
+return $configure;

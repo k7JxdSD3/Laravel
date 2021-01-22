@@ -71,7 +71,7 @@ class Handler extends ExceptionHandler
 	//認証していない場合にガードをみてそれぞれのログインページに飛ばす
 	public function unauthenticated($request, AuthenticationException $exception)
 	{
-		if ($request->exceptsJson()) {
+		if ($request->expectsJson()) {
 			return response()->json(['message' => $exception->getMessage()], 401);
 		}
 

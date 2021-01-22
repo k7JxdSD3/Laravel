@@ -68,13 +68,19 @@
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
-                        <a href="{{ route('admin.login') }}">admin</a>
+                    @auth('admin')
+                        <a href="{{ url('/admin/home') }}">Admin Home</a>
                     @endauth
+                    @auth
+                        <a href="{{ url('/home') }}">User Home</a>
+                    @endauth
+                    @guest
+                    @guest('admin')
+                        <a href="{{ route('login') }}">User Login</a>
+                        <a href="{{ route('register') }}">Register</a>
+                        <a href="{{ route('admin.login') }}">Admin Login</a>
+                    @endguest
+                    @endguest
                 </div>
             @endif
 

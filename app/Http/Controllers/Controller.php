@@ -7,7 +7,18 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+
+use App\Model\Admin;
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+	public function __constract()
+	{
+		$user = Auth::user();
+		View::share('user', $user);
+	}
 }
