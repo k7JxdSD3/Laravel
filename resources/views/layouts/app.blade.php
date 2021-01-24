@@ -28,7 +28,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/home') }}">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
@@ -43,9 +43,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
 						@guest
+							<li><a href="{{ route('login') }}">User Login</a></li>
+							<li><a href="{{ route('register') }}">Register</a></li>
 							@guest('admin')
-								<li><a href="{{ route('login') }}">User Login</a></li>
-								<li><a href="{{ route('register') }}">Register</a></li>
 								<li><a href="{{ route('admin.login') }}">Admin Login</a></li>
 							@endguest
 						@endguest

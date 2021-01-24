@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler
 					break;
 			}
 		} else {
-        	return parent::render($request, $exception);
+			return parent::render($request, $exception);
 		}
     }
 	//認証していない場合にガードをみてそれぞれのログインページに飛ばす

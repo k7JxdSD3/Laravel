@@ -11,15 +11,11 @@ use Illuminate\Support\Facades\Auth;
 class ItemController extends Controller {
 
 	public function index() {
-		$user = Auth::user();
-		\Debugbar::info($user);
 		$items = Item::all();
 		return view('item.index', compact('items'));
 	}
 
 	public function detail($id) {
-		$user = Auth::user();
-		\Debugbar::info($user);
 		$item = Item::where('id', $id)->first();
 		if (isset($item)) {
 			return view('item.detail', compact('item'));
