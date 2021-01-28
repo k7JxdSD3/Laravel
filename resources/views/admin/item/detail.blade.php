@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="panel panel-default">
 				<table class="table">
 				<tr>
 				<th>商品名</th>
@@ -25,11 +25,11 @@
 				</td>
 				</tr>
 				</table>
-            </div>
-			<a href="{{ route('admin.item.edit', ['id' => $item->id]) }}">商品の編集はこちら</a><br>
-            <a href="{{ route('admin.items') }}">商品一覧へ</a>
-        </div>
-    </div>
+			</div>
+			<a href="{{ route('admin.item.edit', ['id' => $item->id]) }}">商品編集はこちら</a><br>
+			<a href="{{ route('admin.items') }}">商品一覧へ</a>
+		</div>
+	</div>
 </div>
 
 @endsection

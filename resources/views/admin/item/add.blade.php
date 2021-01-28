@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('stock') ? ' has-error' : '' }}">
-                            <label for="stock" class="col-md-4 control-label">在庫</label>
+                            <label for="stock" class="col-md-4 control-label">在庫数</label>
 
                             <div class="col-md-6">
                                 <input id="stock" type="number" class="form-control" name="stock" value="{{ old('stock') }}" required autofocus>

@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="panel panel-default">
 				<table class="table">
 				<tr>
 				<th>商品名</th>
@@ -25,9 +25,9 @@
 				</tr>
 				@endforeach
 				</table>
-            </div>
-        	<a href="{{ route('admin.item.add') }}">商品の追加はこちら</a>
-        </div>
-    </div>
+			</div>
+			<a href="{{ route('admin.item.add') }}">商品追加はこちら</a>
+		</div>
+	</div>
 </div>
 @endsection

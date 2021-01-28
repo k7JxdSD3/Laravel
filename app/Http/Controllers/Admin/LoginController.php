@@ -28,7 +28,7 @@ class LoginController extends Controller
 	 * @var string
 	 */
 	// ログイン成功時のジャンプ先
-	protected $redirectTo = '/admin/home';
+	protected $redirectTo = '/admin/item';
 
 	/**
 	 * Create a new controller instance.

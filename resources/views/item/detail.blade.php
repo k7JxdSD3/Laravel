@@ -11,6 +11,7 @@
 				<th>商品説明</th>
 				<th>値段</th>
 				<th>在庫の有無</th>
+				<th>カート追加ボタン</th>
 				</tr>
 				<tr>
 				<td>{{ $item->name }}</td>
@@ -23,6 +24,20 @@
 				在庫あり
 				@endif
 				</td>
+				@if ($item->stock >= 1)
+				<td>
+				@auth
+				<form class="form-horizontal" method="POST" action="{{ route('cart.add', ['item_id' => $item->id]) }}">
+				{{ csrf_field() }}
+				<button type="submit" class="btn btn-primary">
+				カートへ追加
+				</button>
+				</form>
+				@else
+				ログインしてください
+				@endauth
+				</td>
+				@endif
 				</tr>
 				</table>
             </div>

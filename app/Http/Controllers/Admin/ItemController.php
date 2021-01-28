@@ -15,10 +15,10 @@ use Validator;
 class ItemController extends Controller {
 
 	//adminの認証
-    public function __construct()
-    {
-        $this->middleware('auth:admin');
-    }
+	public function __construct()
+	{
+		$this->middleware('auth:admin');
+	}
 
 	public function index()
 	{
@@ -64,8 +64,8 @@ class ItemController extends Controller {
 		return Validator::make($request->all(), [
 			'name' => ['required', 'string', 'max:255'],
 			'explanation' => ['required', 'string', 'max:255'],
-			'price' => ['required', 'numeric', 'digits_between:0,10', 'sometimes'],
-			'stock' => ['required', 'numeric', 'digits_between:0,10'],
+			'price' => ['required', 'numeric', 'max:4294967295', 'min:0', 'sometimes'],
+			'stock' => ['required', 'numeric', 'max:4294967295', 'min:0'],
 		])->validate();
 	}
 
@@ -73,7 +73,6 @@ class ItemController extends Controller {
 	{
 		$item = Item::where('id', $id)->first();
 		if (isset($item)) {
-			\Debugbar::info($item);
 			return view('admin.item.edit', compact('item'));
 		} else {
 			//DBに値が存在しない場合は前のページに戻す
@@ -83,7 +82,7 @@ class ItemController extends Controller {
 
 	public function edit(Request $request, $id)
 	{
-		//リクエストのバリデーション処理
+		//リクエストのバリデーション処理addのをそのまま使用
 		$this->validationAdd($request);
 
 		//データ更新

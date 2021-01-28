@@ -29,7 +29,7 @@
 					</button>
 
 					<!-- Branding Image -->
-					<a class="navbar-brand" href="{{ url('/admin/home') }}">
+					<a class="navbar-brand" href="{{ url('/admin/item') }}">
 						{{ config('app.name', 'Laravel') }}
 					</a>
 				</div>

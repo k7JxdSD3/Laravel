@@ -22,10 +22,8 @@ Auth::routes();
 
 //ホーム画面
 Route::get('/', function () {
-    return view('item');
+	return view('item');
 })->name('home');
-
-//Route::get('/home', 'HomeController@index')->name('home');
 
 //コントローラーで利用するためnameメソッドをチェーン
 Route::get('/item', 'ItemController@index')->name('items');
@@ -40,6 +38,11 @@ Route::get('/item/detail/{id}', 'ItemController@detail')->name('item');
 
 Route::group(['middleware' => 'auth:user'], function() {
 	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/cart/{id}', 'CartController@index')->name('cart');
+	//商品の削除
+	Route::post('/cart/delete/{item_id}', 'CartController@cartDelete')->name('cart.delete');
+	//商品をカートへ追加
+	Route::post('/cart/add/{item_id}', 'CartController@cartAdd')->name('cart.add');
 });
 
 /*
@@ -61,18 +64,21 @@ Route::group(['prefix' => 'admin'], function() {
 |-------------------------------------------------------------------------
  */
 
-
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
 	Route::post('/logout', 'Admin\LoginController@logout')->name('admin.logout');
 	Route::get('/home', 'Admin\HomeController@index')->name('admin.home');
+
 	//管理者側のitemのルート
 	Route::get('/item', 'Admin\ItemController@index')->name('admin.items');
+
 	//管理者側のitem詳細画面へのルート
 	Route::get('/item/detail/{id}', 'Admin\ItemController@detail')->name('admin.item');
 	Route::get('/item/detail/', function() { return redirect('/admin/item'); });
+
 	//商品追加
 	Route::get('/item/add', 'Admin\ItemController@showAddForm')->name('admin.item.add');
 	Route::post('/item/add', 'Admin\ItemController@add');
+
 	//商品編集
 	Route::get('/item/edit/{id}', 'Admin\ItemController@showEditForm')->name('admin.item.edit');
 	Route::post('/item/edit/{id}', 'Admin\ItemController@edit');
