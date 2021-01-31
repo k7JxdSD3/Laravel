@@ -38,11 +38,14 @@ Route::get('/item/detail/{id}', 'ItemController@detail')->name('item');
 
 Route::group(['middleware' => 'auth:user'], function() {
 	Route::get('/home', 'HomeController@index')->name('home');
-	Route::get('/cart/{id}', 'CartController@index')->name('cart');
+	//商品カート
+	Route::get('/cart', 'CartController@index')->name('cart');
 	//商品の削除
 	Route::post('/cart/delete/{item_id}', 'CartController@cartDelete')->name('cart.delete');
+	Route::get('/cart/delete/{item_id}', function() { return redirect('/item'); });
 	//商品をカートへ追加
 	Route::post('/cart/add/{item_id}', 'CartController@cartAdd')->name('cart.add');
+	Route::get('/cart/add/{item_id}', function() { return redirect('/item'); });
 });
 
 /*
@@ -90,5 +93,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
 |) twitter Login
 |-------------------------------------------------------------------------
  */
-Route::get('login/twitter', 'Auth\LoginController@redirectToTwitterProvider')->name('twitter_login');
-Route::get('login/twitter/callback', 'Auth\LoginController@handleTwitterProviderCallback');
+
+Route::get('sns/{provider}/login', 'Socialite\SnsBaseController@getAuth')->name('sns.login');
+Route::get('sns/{ptovider}/callback', 'Socialite\SnsBaseController@authCallback');
+
+/*
+|-------------------------------------------------------------------------
+|) TwitterOAth
+|-------------------------------------------------------------------------
+ */
+Route::get('twitter/search', 'Twitter\TwitterController@search')->name('twitter.search');
+Route::get('twitter/result', 'Twitter\TwitterController@result');
+Route::post('twitter/result', 'Twitter\TwitterController@result')->name('twitter.result');

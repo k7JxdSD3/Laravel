@@ -54,11 +54,11 @@ class Handler extends ExceptionHandler
 			switch ($exception->getStatusCode()) {
 				//not fouond
 				case 404:
-					return redirect('/');
+					return redirect('/item');
 					break;
 				//internal error
 				case 500:
-					return redirect('/');
+					return redirect('/item');
 					break;
 				default:
 					return $this->renderHttpException($exception);

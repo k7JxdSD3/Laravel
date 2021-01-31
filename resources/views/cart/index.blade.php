@@ -4,6 +4,9 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
+		@if ( session('flash_message'))
+		<div class="alert alert-success text-center">{{ session('flash_message') }}</div>
+		@endif
 			<div class="panel panel-default">
 				@if (!empty($carts_data))
 				<table class="table">
@@ -17,9 +20,9 @@
 				@foreach ($carts_data as $cart)
 				<tr>
 				<td>{{ $cart['name'] }}</td>
-				<td>{{ $cart['price'] }}</td>
-				<td>{{ $cart['total_items'] }}</td>
-				<td>{{ $cart['subtotal'] }}</td>
+				<td>￥{{ $cart['price'] }}</td>
+				<td>{{ $cart['number_items'] }}</td>
+				<td>￥{{ $cart['subtotal'] }}</td>
 				<td>
 				<form class="form-horizontal" method="POST" action="{{ route('cart.delete', ['item_id' => $cart['item_id']]) }}">
 				{{ csrf_field() }}
@@ -38,7 +41,8 @@
 				@endif
 			</div>
 			@if (!empty($carts_data))
-			<p><font size="5">合計金額 {{ $total }}</font></p>
+			<p><font size="4">合計金額（税抜き）: ￥{{ $total }}</font></p>
+			<p><font size="4">合計金額（税込み）: ￥{{ $including_tax }}</font></p>
 			@endif
 			<a href="{{ route('items') }}">商品一覧へ</a>
 		</div>

@@ -49,8 +49,9 @@
 								<li><a href="{{ route('admin.login') }}">Admin Login</a></li>
 							@endguest
 						@endguest
+							<li><a href="{{ route('items') }}">Item List</a></li>
 						@auth
-							<li><a href="{{ route('cart', ['id' => Auth::user()->id]) }}">Cart</a></li>
+							<li><a href="{{ route('cart') }}">Cart</a></li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" v-pre>
 									{{ Auth::user()->name }} <span class="caret"></span>

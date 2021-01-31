@@ -14,7 +14,7 @@
 				@foreach ($items as $item)
 				<tr>
 				<td><a href="{{ route('item', ['id' => $item->id]) }}">{{ $item->name }}</a></td>
-				<td>{{ $item->price }}</td>
+				<td>￥{{ $item->price }}</td>
 				<td>
 				@if ($item->stock === 0)
 				在庫無し

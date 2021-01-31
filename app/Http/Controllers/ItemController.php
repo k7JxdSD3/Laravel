@@ -17,7 +17,6 @@ class ItemController extends Controller {
 
 	public function detail($id) {
 		$item = Item::where('id', $id)->first();
-		\Debugbar::info($item);
 		if (isset($item)) {
 			return view('item.detail', compact('item'));
 		} else {

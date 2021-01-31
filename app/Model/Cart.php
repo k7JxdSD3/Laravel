@@ -16,9 +16,6 @@ class Cart extends Model
 	use SoftDeletes;
 	protected $dates = ['daleted_at'];
 
-	//public function user()
-	//{
-	//	return $this->belongsTo('App\Model\User');
-	//}
+	protected $fillable = ['user_id', 'item_id', 'number_items'];
 }
 
