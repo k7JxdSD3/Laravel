@@ -29,6 +29,10 @@ Route::get('/', function () {
 Route::get('/item', 'ItemController@index')->name('items');
 Route::get('/item/detail/{id}', 'ItemController@detail')->name('item');
 
+// どのルートにも一致しない場合にさせたい処理
+Route::fallback(function() {
+	return view('item');
+});
 
 /*
 |-------------------------------------------------------------------------
@@ -46,6 +50,17 @@ Route::group(['middleware' => 'auth:user'], function() {
 	//商品をカートへ追加
 	Route::post('/cart/add/{item_id}', 'CartController@cartAdd')->name('cart.add');
 	Route::get('/cart/add/{item_id}', function() { return redirect('/item'); });
+
+	//お届け先住所
+	Route::get('/address', 'AddressController@index')->name('address');
+	//住所登録
+	Route::get('/address/add', 'AddressController@showAddForm')->name('address.add');
+	Route::post('/address/add', 'AddressController@add');
+	//住所編集
+	Route::get('/address/edit/{address_id}', 'AddressController@showEditForm')->name('address.edit');
+	Route::post('/address/edit/{address_id}', 'AddressController@edit');
+	//住所削除
+	Route::get('/address/delete/{address_id}', 'AddressController@delete')->name('address.delete');
 });
 
 /*

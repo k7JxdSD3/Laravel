@@ -6,6 +6,8 @@ use Exception;
 //Auth Login
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +52,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+		if ($exception instanceof MethodNotAllowedHttpException) {
+			return redirect('/item');
+		}
+
+		if ($exception instanceof ModelNotFoundException) {
+			return redirect('/item');
+		}
+
 		if ($this->isHttpException($exception)) {
 			switch ($exception->getStatusCode()) {
 				//not fouond
@@ -64,9 +74,9 @@ class Handler extends ExceptionHandler
 					return $this->renderHttpException($exception);
 					break;
 			}
-		} else {
-			return parent::render($request, $exception);
 		}
+
+		return parent::render($request, $exception);
     }
 	//認証していない場合にガードをみてそれぞれのログインページに飛ばす
 	public function unauthenticated($request, AuthenticationException $exception)
