@@ -44,16 +44,17 @@
 					<ul class="nav navbar-nav navbar-right">
 						<!-- Authentication Links -->
 						@guest
-							<li><a href="{{ route('login') }}">User Login</a></li>
+							<li><a href="{{ route('login') }}">ユーザーログイン</a></li>
 						@endguest
 						@auth('admin')
-							<li><a href="{{ route('admin.items') }}">Item List</a></li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" v-pre>
 									{{ Auth::user()->name }} <span class="caret"></span>
 								</a>
 
 								<ul class="dropdown-menu">
+									<li><a href="{{ route('admin.items') }}">商品一覧</a></li>
+									<li><a href="{{ route('users.index') }}">会員一覧</a></li>
 									<li>
 										<a href="{{ route('admin.logout') }}"
 											onclick="event.preventDefault();

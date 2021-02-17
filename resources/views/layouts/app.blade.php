@@ -44,26 +44,28 @@
 					<ul class="nav navbar-nav navbar-right">
 						<!-- Authentication Links -->
 						@guest
-							<li><a href="{{ route('login') }}">User Login</a></li>
-							<li><a href="{{ route('register') }}">Register</a></li>
+							<li><a href="{{ route('login') }}">ログイン</a></li>
+							<li><a href="{{ route('register') }}">登録</a></li>
 							@guest('admin')
-								<li><a href="{{ route('admin.login') }}">Admin Login</a></li>
+								<li><a href="{{ route('admin.login') }}">管理者</a></li>
 							@endguest
 						@endguest
-							<li><a href="{{ route('items') }}">Item List</a></li>
+							<li><a href="{{ route('items') }}">商品一覧</a></li>
 						@auth
-							<li><a href="{{ route('cart') }}">Cart</a></li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" v-pre>
 									{{ Auth::user()->name }} <span class="caret"></span>
 								</a>
 
 								<ul class="dropdown-menu">
+									<li><a href="{{ route('cart') }}">カート</a></li>
+									<li><a href="{{ route('address') }}">住所一覧</a></li>
+									<li><a href="{{ route('auth.edit') }}">ユーザー情報編集</a></li>
 									<li>
 										<a href="{{ route('logout') }}"
 											onclick="event.preventDefault();
 												 document.getElementById('logout-form').submit();">
-											User Logout
+											Logout
 										</a>
 
 										<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

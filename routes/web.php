@@ -61,6 +61,13 @@ Route::group(['middleware' => 'auth:user'], function() {
 	Route::post('/address/edit/{address_id}', 'AddressController@edit');
 	//住所削除
 	Route::get('/address/delete/{address_id}', 'AddressController@delete')->name('address.delete');
+
+	//ユーザー編集
+	Route::get('/user/edit', 'Auth\UserController@showEditForm')->name('auth.edit');
+	Route::post('/user/edit', 'Auth\UserController@edit')->name('auth.update');
+	//メール更新処理
+	Route::get('/user/email/{token}', 'Auth\ResetEmailController@reset');
+
 });
 
 /*
@@ -101,6 +108,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
 	Route::get('/item/edit/{id}', 'Admin\ItemController@showEditForm')->name('admin.item.edit');
 	Route::post('/item/edit/{id}', 'Admin\ItemController@edit');
 	Route::get('/item/edit/', function() { return redirect('/admin/item'); });
+
+	//User一覧
+	Route::resource('/users', 'Admin\UserController');
 });
 
 /*
@@ -109,8 +119,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
 |-------------------------------------------------------------------------
  */
 
-Route::get('sns/{provider}/login', 'Socialite\SnsBaseController@getAuth')->name('sns.login');
-Route::get('sns/{ptovider}/callback', 'Socialite\SnsBaseController@authCallback');
+Route::get('sns/{provider}/login', 'Auth\SnsBaseController@getAuth')->name('sns.login');
+Route::get('sns/{ptovider}/callback', 'Auth\SnsBaseController@authCallback');
+Route::get('sns/{ptovider}/logout', 'Auth\SnsBaseController@logoutauthCallback');
 
 /*
 |-------------------------------------------------------------------------
