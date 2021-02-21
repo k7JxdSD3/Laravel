@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tokyo',
 
     /*
     |--------------------------------------------------------------------------
@@ -174,6 +174,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\ValidatorServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
@@ -236,6 +237,8 @@ return [
 		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 		// TwitterOAthAliases
 		'Twitter' => Illuminate\Support\Facades\Twitter::class,
+		// Intervention Image
+		'InterventionImage' => Intervention\Image\Facades\Image::class,
 
     ],
 

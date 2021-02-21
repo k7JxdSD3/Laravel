@@ -31,7 +31,7 @@ Route::get('/item/detail/{id}', 'ItemController@detail')->name('item');
 
 // どのルートにも一致しない場合にさせたい処理
 Route::fallback(function() {
-	return view('item');
+	return redirect()->back();
 });
 
 /*
@@ -89,28 +89,28 @@ Route::group(['prefix' => 'admin'], function() {
 |-------------------------------------------------------------------------
  */
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
-	Route::post('/logout', 'Admin\LoginController@logout')->name('admin.logout');
-	Route::get('/home', 'Admin\HomeController@index')->name('admin.home');
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function() {
+	Route::post('/logout', 'Admin\LoginController@logout')->name('logout');
+	Route::get('/home', 'Admin\HomeController@index')->name('home');
 
 	//管理者側のitemのルート
-	Route::get('/item', 'Admin\ItemController@index')->name('admin.items');
+	Route::get('/item', 'Admin\ItemController@index')->name('items');
 
 	//管理者側のitem詳細画面へのルート
-	Route::get('/item/detail/{id}', 'Admin\ItemController@detail')->name('admin.item');
+	Route::get('/item/detail/{id}', 'Admin\ItemController@detail')->name('item');
 	Route::get('/item/detail/', function() { return redirect('/admin/item'); });
 
 	//商品追加
-	Route::get('/item/add', 'Admin\ItemController@showAddForm')->name('admin.item.add');
+	Route::get('/item/add', 'Admin\ItemController@showAddForm')->name('item.add');
 	Route::post('/item/add', 'Admin\ItemController@add');
 
 	//商品編集
-	Route::get('/item/edit/{id}', 'Admin\ItemController@showEditForm')->name('admin.item.edit');
+	Route::get('/item/edit/{id}', 'Admin\ItemController@showEditForm')->name('item.edit');
 	Route::post('/item/edit/{id}', 'Admin\ItemController@edit');
 	Route::get('/item/edit/', function() { return redirect('/admin/item'); });
 
 	//User一覧
-	Route::resource('/users', 'Admin\UserController');
+	Route::resource('/users', 'Admin\UserController', ['only' => ['index', 'show']]);
 });
 
 /*

@@ -53,22 +53,22 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
 		if ($exception instanceof MethodNotAllowedHttpException) {
-			return redirect('/item');
+			return redirect()->back();
 		}
 
 		if ($exception instanceof ModelNotFoundException) {
-			return redirect('/item');
+			return redirect()->back();
 		}
 
 		if ($this->isHttpException($exception)) {
 			switch ($exception->getStatusCode()) {
 				//not fouond
 				case 404:
-					return redirect('/item');
+					return redirect()->back();
 					break;
 				//internal error
 				case 500:
-					return redirect('/item');
+					return redirect()->back();
 					break;
 				default:
 					return $this->renderHttpException($exception);

@@ -98,13 +98,21 @@ class SnsBaseController extends Controller
 	}
 
 	//拡張子確認
-	private function _getImageType($photo_url) {
-		//画像の拡張子判定
-		$extention = exif_imagetype($photo_url);
-		if (!in_array($extention , [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) {
-			return $extention;
+	private function _getImageType($image_url) {
+	//画像の拡張子判定
+		list($img_with, $img_height, $mime_type, $attr) = getimagesize($image_url);
+		switch ($mime_type) {
+			case IMAGETYPE_JPEG:
+				$extention = 'jpg';
+				break;
+			case IMAGETYPE_PNG:
+				$extention = 'png';
+				break;
+			case IMAGETYPE_GIF:
+				$extention = 'gif';
+				break;
 		}
-		return false;
+		return $extention;
 	}
 
 }

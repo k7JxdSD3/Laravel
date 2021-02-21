@@ -54,7 +54,7 @@
 
 								<ul class="dropdown-menu">
 									<li><a href="{{ route('admin.items') }}">商品一覧</a></li>
-									<li><a href="{{ route('users.index') }}">会員一覧</a></li>
+									<li><a href="{{ route('admin.users.index') }}">会員一覧</a></li>
 									<li>
 										<a href="{{ route('admin.logout') }}"
 											onclick="event.preventDefault();

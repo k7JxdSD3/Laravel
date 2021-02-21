@@ -58,7 +58,8 @@ return [
         'string'  => ':attribute は :value 文字以上である必要があります。',
         'array'   => ':attribute には value 個以上の項目が必要です。',
     ],
-    'image'                => ':attribute 画像は「jpg」「png」「bmp」「gif」「svg」のみ有効です',
+	//exif_imagetypeではsvgが対応していなかった
+    'image'                => ':attribute 画像は「jpg」「png」「gif」のみ有効です',
     'in'                   => ':attribute 無効な値です',
     'in_array'             => ':attribute は :other と一致する必要があります',
     'integer'              => ':attribute は整数のみ有効です',
