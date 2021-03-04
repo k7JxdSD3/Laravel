@@ -31,7 +31,19 @@
 <tr>
 <td>{{ $cart['name'] }}</td>
 <td>￥{{ $cart['price'] }}</td>
-<td>{{ $cart['number_items'] }}</td>
+<td>
+@if ($cart['number_items'] > 1)
+<a href="{{ route('cart.decrease', ['item_id' => $cart['item_id']]) }}">
+<button type="submit" class="btn btn-danger btn-sm">-</button>
+</a>
+@endif
+<font size="3">{{ $cart['number_items'] }}</font>
+@if ($cart['number_items'] < $cart['item_stock'])
+<a href="{{ route('cart.increase', ['item_id' => $cart['item_id']]) }}">
+<button type="submit" class="btn btn-success btn-sm">+</button>
+</a>
+@endif
+</td>
 <td>￥{{ $cart['subtotal'] }}</td>
 <td>
 <form class="form-horizontal" method="POST" action="{{ route('cart.delete', ['item_id' => $cart['item_id']]) }}">
@@ -45,9 +57,7 @@
 @endforeach
 </table>
 @else
-<font size="5">
 カートが空です
-</font>
 @endif
 </div>
 

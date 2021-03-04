@@ -18,21 +18,18 @@ use InterventionImage;
 class ItemController extends Controller {
 
 	//adminの認証
-	public function __construct(Item $item)
-	{
+	public function __construct(Item $item) {
 		$this->middleware('auth:admin');
 		$this->item = $item;
 	}
 
-	public function index()
-	{
+	public function index() {
 		//データベースからすべての情報を取得
-		$items = $this->item->all();
+		$items = $this->item->paginate(14);
 		return view('admin.item.index', compact('items'));
 	}
 
-	public function detail($id)
-	{
+	public function detail($id) {
 		$item = $this->item->where('id', $id)->first();
 		if (isset($item)) {
 			return view('admin.item.detail', compact('item'));
@@ -42,17 +39,19 @@ class ItemController extends Controller {
 		}
 	}
 
-	public function showAddForm ()
-	{
+	public function showAddForm() {
 		return view('admin.item.add');
 	}
 
-	public function add(AddItemRequest $request)
-	{
+	public function add(AddItemRequest $request) {
 		$request_params = $request->all();
 		//画像をディレクトリに保存
 		if ($request->image_name) {
 			$request_params['image_name'] = $this->_putImage($request->file('image_name'));
+			if ($request_params['image_name'] === false) {
+				$error = '同一画像が存在します他の画像を試してください';
+				return redirect()->route('admin.item.add')->with('error', $error)->withInput($request->except('image_name'));
+			}
 		}
 		//データ挿入
 		if ($this->item->addItem($request_params)) {
@@ -63,8 +62,7 @@ class ItemController extends Controller {
 		return redirect()->route('admin.items');
 	}
 
-	public function showEditForm ($id)
-	{
+	public function showEditForm($id) {
 		$item = $this->item->where('id', $id)->first();
 		if (isset($item)) {
 			return view('admin.item.edit', compact('item'));
@@ -74,11 +72,15 @@ class ItemController extends Controller {
 		}
 	}
 
-	public function edit(AddItemRequest $request, $id = null)
-	{
+	public function edit(AddItemRequest $request, $id = null) {
 		$request_params = $request->all();
-		if ($request->image_name) {
-			$request_params['image_name'] = $this->_putImage($request->file('image_name'));
+		if ($request->image_name && $request->delete !== 'delete') {
+			$request_params['image_name'] = $this->_putImage($request->file('image_name'), $id);
+			//同一画像に更新した場合
+			if ($request_params['image_name'] === false) {
+				$error = '同一画像が存在します。他の画像を試してください';
+				return redirect()->route('admin.item.edit', ['id' => $id])->with('error', $error);
+			}
 		}
 		if ($request->delete === 'delete') {
 			$request_params['image_name'] = $this->_deleteImage($id);
@@ -99,7 +101,7 @@ class ItemController extends Controller {
 
 	//拡張子確認
 	private function _getImageType($image_url) {
-	//画像の拡張子判定
+		//画像の拡張子判定
 		list($img_with, $img_height, $mime_type, $attr) = getimagesize($image_url);
 		switch ($mime_type) {
 			case IMAGETYPE_JPEG:
@@ -116,18 +118,24 @@ class ItemController extends Controller {
 	}
 
 	//画像をディレクトリに保存
-	private function _putImage($image_url) {
+	private function _putImage($image_url, $id = null) {
 		$extention = $this->_getImageType($image_url);
 		$unique_name = sha1_file($image_url);
 		$image_name = sprintf('%s.%s', $unique_name, $extention);
+		$image_path = 'public/item_image/';
+		$before_image_name = $this->item->where('id', $id)->value('image_name');
+		$before_image_count = $this->item->where('image_name', $image_name)->count();
 
-		if (File::exists($image_name)) {
-			Storage::delete($image_name);
+		//同一画像のチェック
+		if ($before_image_count) {
+			return false;
+		}
+		if ($before_image_name) {
+			Storage::delete($image_path . $before_image_name);
 		}
 
 		//storage/app に保存
 		$image = $image_url->storeAs('public/item_image', $image_name);
-		$image_name = str_replace('public/item_image/', '', $image);
 
 		//リサイズ
 		//取得する画像を編集
@@ -136,7 +144,6 @@ class ItemController extends Controller {
 			->resize(100, 100, function ($constration) {
 				$constration->aspectRatio();
 			})->save($path);
-
 		return $image_name;
 	}
 

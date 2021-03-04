@@ -12,7 +12,9 @@
 
 	<!-- Styles -->
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/stripe.css') }}" rel="stylesheet">
 	<script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+
 </head>
 <body>
 	<div id="app">
@@ -61,6 +63,7 @@
 									<li><a href="{{ route('cart') }}">カート</a></li>
 									<li><a href="{{ route('address') }}">住所一覧</a></li>
 									<li><a href="{{ route('auth.edit') }}">ユーザー情報編集</a></li>
+									<li><a href="{{ route('cards.index') }}">クレジットカード一覧</a></li>
 									<li>
 										<a href="{{ route('logout') }}"
 											onclick="event.preventDefault();
@@ -74,6 +77,7 @@
 									</li>
 								</ul>
 							</li>
+							<li><a href="{{ route('payments.create') }}">注文確認</a></li>
 						@endauth
 					</ul>
 				</div>
@@ -85,5 +89,9 @@
 
 	<!-- Scripts -->
 	<script src="{{ asset('js/app.js') }}"></script>
+	<!-- stripe -->
+	@if (request()->path() === 'payments/create' || request()->path() === 'cards/create')
+		@include('payments.payment');
+	@endif
 </body>
 </html>

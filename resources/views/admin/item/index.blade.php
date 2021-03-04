@@ -15,6 +15,15 @@
 {{ session('error') }}
 </div>
 @endif
+
+<div class="form-group">
+<a href="{{ route('admin.item.add') }}">
+<button type="submit" class="btn btn-primary">
+<font color="white">商品追加はこちら</font>
+</button>
+</a>
+</div>
+
 <div class="panel panel-default">
 <div class="panel-heading">商品一覧	</div>
 <table class="table">
@@ -37,8 +46,8 @@
 </tr>
 @endforeach
 </table>
+<div class="text-center">{{ $items->links() }}</div>
 </div>
-<a href="{{ route('admin.item.add') }}">商品追加はこちら</a>
 </div>
 </div>
 </div>

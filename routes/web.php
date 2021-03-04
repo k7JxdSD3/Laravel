@@ -50,9 +50,13 @@ Route::group(['middleware' => 'auth:user'], function() {
 	//商品をカートへ追加
 	Route::post('/cart/add/{item_id}', 'CartController@cartAdd')->name('cart.add');
 	Route::get('/cart/add/{item_id}', function() { return redirect('/item'); });
+	//商品数量増減
+	Route::get('/cart/increase/{item_id}', 'CartController@numberItemIncrease')->name('cart.increase');
+	Route::get('/cart/decrease/{item_id}', 'CartController@numberItemDecrease')->name('cart.decrease');
 
 	//お届け先住所
 	Route::get('/address', 'AddressController@index')->name('address');
+	Route::post('/address', 'AddressController@addDefaultAddress')->name('address.default');
 	//住所登録
 	Route::get('/address/add', 'AddressController@showAddForm')->name('address.add');
 	Route::post('/address/add', 'AddressController@add');
@@ -67,6 +71,14 @@ Route::group(['middleware' => 'auth:user'], function() {
 	Route::post('/user/edit', 'Auth\UserController@edit')->name('auth.update');
 	//メール更新処理
 	Route::get('/user/email/{token}', 'Auth\ResetEmailController@reset');
+
+	//支払情報
+	//Route::post('/payments/create', 'PaymentController@create')->name('payments.create');
+	Route::get('/payments/complete/{payment_id}', 'PaymentController@complete')->name('payments.complete');
+	Route::resource('/payments', 'PaymentController');
+	//クレジットカード処理
+	Route::get('/cards/{card_id}/delete', 'CardController@delete')->name('cards.delete');
+	Route::resource('/cards', 'CardController');
 
 });
 

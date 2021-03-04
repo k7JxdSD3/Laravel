@@ -35,6 +35,15 @@
 @auth
 <form class="form-horizontal" method="POST" action="{{ route('cart.add', ['item_id' => $item->id]) }}">
 {{ csrf_field() }}
+<small>数量</small>
+<select name="quantity">
+@for ($i = 1; $i <= $item->stock; $i++)
+<option>{{ $i }}</option>
+@if ($i === 9)
+@break
+@endif
+@endfor
+</select>
 <button type="submit" class="btn btn-primary">
 カートへ追加
 </button>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Model\Address;
 use App\Http\Requests\AddAddressRequest;
+use App\User;
+use Illuminate\Http\Request;
+use Auth;
 
 class AddressController extends Controller
 {
@@ -16,8 +19,11 @@ class AddressController extends Controller
 
 	// 一覧ページ
 	public function index() {
-		$addresses = $this->address->allGet();
-		return view('address.index', compact('addresses'));
+		$default_address_id = Auth::user()->address_id;
+		$addresses = $this->address->allGetAddresses();
+		$addresses_count = $this->address->allGetAddressesCount();
+		dd($addresses_count);
+		return view('address.index', compact('addresses', 'default_address_id'));
 	}
 
 	// 登録フォーム
@@ -62,11 +68,29 @@ class AddressController extends Controller
 	// 削除処理
 	public function delete($address_id) {
 		if ($this->address->softDeleteDb($address_id)) {
+			$user = User::findOrFail(Auth::user()->id);
+			if ($address_id == $user->address_id) {
+				$next_id = null;
+				if ($address = $this->address->where('user_id', $user->id)->first()) {
+					$next_id = $address->value('id');
+				}
+				$user->address_id = $next_id;
+				$user->save();
+			}
 			session()->flash('success', 'お届け先を削除しました');
 		} else {
 			session()->flash('error', 'お届け先を削除できませんでした');
 		}
 		return redirect()->route('address');
+	}
+
+	public static function addDefaultAddress(Request $request) {
+		if ($user = User::findOrFail(Auth::user()->id)) {
+			$user->address_id = $request->address_id;
+			$user->save();
+			return redirect()->route('payments.create');
+		}
+		return false;
 	}
 }
 

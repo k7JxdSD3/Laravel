@@ -28,7 +28,7 @@ class AddItemRequest extends FormRequest
 			'explanation' => ['required', 'string', 'max:255'],
 			'price' => ['required', 'numeric', 'max:4294967295', 'min:0', 'sometimes'],
 			'stock' => ['required', 'numeric', 'max:4294967295', 'min:0'],
-			'image_name' => ['image', 'mimes:jpeg,jpg,png,gif', 'max:1024', 'nullable'],
+			'image_name' => ['image', 'mimes:jpeg,jpg,png,gif', 'max:2048', 'nullable'],
 			'delete' => ['nullable', 'sometimes'],
 		];
 	}

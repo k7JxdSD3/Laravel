@@ -26,8 +26,13 @@ class Address extends Model
 		'phone_number',
 	];
 
-	public function allGet() {
+	public function allGetAddresses() {
 		$addresses = $this->where('user_id', Auth::id())->get();
+		return $addresses;
+	}
+
+	public function allGetAddressesCount() {
+		$addresses = $this->where('user_id', Auth::id())->count();
 		return $addresses;
 	}
 

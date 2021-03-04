@@ -9,6 +9,7 @@ use App\Model\Item;
 use Illuminate\Support\Facades\Auth;
 //ファサードのトランザクションを使用
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class CartController extends Controller {
 	//userの認証
@@ -32,6 +33,7 @@ class CartController extends Controller {
 				'name' => $cart->item->name,
 				'price' => $cart->item->price,
 				'item_id' => $cart->item->id,
+				'item_stock' => $cart->item->stock,
 				//小計
 				'subtotal' => $cart->number_items * $cart->item->price,
 			];
@@ -41,6 +43,7 @@ class CartController extends Controller {
 		$collection = collect($carts_data);
 		$total = $collection->sum('subtotal');
 		$including_tax= round($total + $total * 0.1);
+		//商品が存在するか確認
 		return view('cart.index', compact('carts_data', 'total', 'including_tax'));
 	}
 
@@ -69,10 +72,18 @@ class CartController extends Controller {
 		});
 	}
 
-	public function cartAdd($item_id)
+	public function cartAdd(Request $request, $item_id)
 	{
+		$quantity = $request->quantity;
 		//商品が存在するか確認
 		if (!$item_stock = Item::where('id', $item_id)->value('stock')) {
+			return back();
+		}
+		if (!preg_match('/^[1-9]\d{0,9}$/', $quantity)) {
+			return back();
+		}
+
+		if ($item_stock < $quantity) {
 			return back();
 		}
 
@@ -82,20 +93,75 @@ class CartController extends Controller {
 			$number_items = 0;
 		}
 
-		return DB::transaction(function() use($item_id, $user_id, $number_items, $item_stock) {
+		return DB::transaction(function() use($item_id, $user_id, $number_items, $item_stock, $quantity) {
 			//商品がcartsテーブルにあれば更新なければ追加
 			Cart::updateOrCreate(
 				['item_id' => $item_id, 'user_id' => $user_id],
-				['number_items' => $number_items + 1]
+				['number_items' => $number_items + $quantity]
 			);
 			session()->flash('flash_message', '商品を追加しました');
 
 			//在庫から追加分を引く
+			$item = Item::find($item_id);
+			$item->stock = $item_stock - $quantity;
+			$item->save();
+			return redirect()->route('cart');
+		});
+	}
+
+	public function numberItemDecrease($item_id)
+	{
+		//商品が存在するか確認
+		if (!$item_stock = Item::where('id', $item_id)->value('stock')) {
+			return back();
+		}
+
+		$user_id = Auth::user()->id;
+		//既存のカート内の商品数取得
+		$cart = Cart::where([['user_id', $user_id], ['item_id', $item_id]])->first();
+		if ($cart->number_items < 2) {
+			return back();
+		}
+
+		return DB::transaction(function() use($item_id, $user_id, $cart, $item_stock) {
+			//商品がcartsテーブルにあれば更新なければ追加
+			$cart = Cart::find($cart->id);
+			$cart->number_items = $cart->number_items - 1;
+			$cart->save();
+
+			//在庫から削除文を足す
+			$item = Item::find($item_id);
+			$item->stock = $item_stock + 1;
+			$item->save();
+			return redirect()->route('cart');
+		});
+	}
+
+	public function numberItemIncrease($item_id)
+	{
+		//商品が存在するか確認
+		if (!$item_stock = Item::where('id', $item_id)->value('stock')) {
+			return back();
+		}
+
+		$user_id = Auth::user()->id;
+		//既存のカート内の商品数取得
+		$cart = Cart::where([['user_id', $user_id], ['item_id', $item_id]])->first();
+		if ($cart->number_items > $item_stock) {
+			return back();
+		}
+
+		return DB::transaction(function() use($item_id, $user_id, $cart, $item_stock) {
+			//商品がcartsテーブルにあれば更新なければ追加
+			$cart = Cart::find($cart->id);
+			$cart->number_items = $cart->number_items + 1;
+			$cart->save();
+
+			//在庫から削除文を足す
 			$item = Item::find($item_id);
 			$item->stock = $item_stock - 1;
 			$item->save();
 			return redirect()->route('cart');
 		});
 	}
-
 }

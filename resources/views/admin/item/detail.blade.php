@@ -15,6 +15,15 @@
 {{ session('error') }}
 </div>
 @endif
+
+<div class="form-group">
+<a href="{{ route('admin.item.edit', ['id' => $item->id]) }}">
+<button type="submit" class="btn btn-primary">
+<font color="white">商品編集はこちら</font>
+</button>
+</a>
+</div>
+
 <div class="panel panel-default">
 <div class="panel-heading">商品詳細</div>
 <table class="table">
@@ -44,7 +53,6 @@
 </tr>
 </table>
 </div>
-<a href="{{ route('admin.item.edit', ['id' => $item->id]) }}">商品編集はこちら</a><br>
 <a href="{{ route('admin.items') }}">商品一覧へ</a>
 </div>
 </div>

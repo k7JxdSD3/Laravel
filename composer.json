@@ -12,7 +12,8 @@
         "intervention/image": "^2.5",
         "laravel/framework": "5.5.*",
         "laravel/socialite": "3.*",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "stripe/stripe-php": "^7.75"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

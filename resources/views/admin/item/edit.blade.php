@@ -65,20 +65,19 @@
 </div>
 </div>
 
-<div class="form-group{{ $errors->has('image_name') ? ' has-error' : '' }}">
-<label for="image_name" class="col-md-4 control-label">商品画像</label>
 @if ($item->image_name)
-<br><small class="col-md-6">現在の画像</small>
-<div class="col-md-6"><img src="{{ asset('storage/item_image/' . $item->image_name) }}" alt="image">
-<br>
-<div class="form-check">
+<div class="form-check text-center">
+<small>現在の画像</small><br>
+<div class="text-center"><img src="{{ asset('storage/item_image/' . $item->image_name) }}" alt="image"></div>
 <input class="form-check-input" type="checkbox" name="delete" value="delete" id="delete">
 <label class="form-check-label" for="delete">
 画像を削除する
 </label>
 </div>
-</div>
 @endif
+
+<div class="form-group{{ $errors->has('image_name') ? ' has-error' : '' }}">
+<label for="image_name" class="col-md-4 control-label">商品画像</label>
 
 <div class="col-md-6">
 <input id="image_name" type="file" class="form-control" name="image_name" autofocus>

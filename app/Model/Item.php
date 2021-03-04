@@ -19,7 +19,6 @@ class Item extends Model {
 		'image_name',
 	];
 
-
 	public function addItem($request) {
 		$item = new Item;
 		$item->fill($request)->save();
