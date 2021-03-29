@@ -73,12 +73,12 @@ Route::group(['middleware' => 'auth:user'], function() {
 	Route::get('/user/email/{token}', 'Auth\ResetEmailController@reset');
 
 	//支払情報
-	//Route::post('/payments/create', 'PaymentController@create')->name('payments.create');
 	Route::get('/payments/complete/{payment_id}', 'PaymentController@complete')->name('payments.complete');
-	Route::resource('/payments', 'PaymentController');
+	Route::post('/payments/cancel/{charge_id}', 'PaymentController@cancel')->name('payments.cancel');
+	Route::resource('/payments', 'PaymentController', ['only' => ['index', 'show', 'create', 'store']]);
 	//クレジットカード処理
 	Route::get('/cards/{card_id}/delete', 'CardController@delete')->name('cards.delete');
-	Route::resource('/cards', 'CardController');
+	Route::resource('/cards', 'CardController', ['except' => ['show', 'update', 'destroy']]);
 
 });
 

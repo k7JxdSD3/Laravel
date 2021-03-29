@@ -64,6 +64,7 @@
 									<li><a href="{{ route('address') }}">住所一覧</a></li>
 									<li><a href="{{ route('auth.edit') }}">ユーザー情報編集</a></li>
 									<li><a href="{{ route('cards.index') }}">クレジットカード一覧</a></li>
+									<li><a href="{{ route('payments.index') }}">購入履歴一覧</a></li>
 									<li>
 										<a href="{{ route('logout') }}"
 											onclick="event.preventDefault();

@@ -80,16 +80,12 @@ class User extends Authenticatable
 		$user = Auth::user();
 		\Stripe\Stripe::setApiKey(\Config::get('payment.stripe_secret_key'));
 		//stripe_idが存在すればその顧客に登録
-		try {
-			$customer = \Stripe\Customer::create([
-				'card' => $token,
-				'name' => $user->name,
-				'email' => $user->email,
-				'description' => $user->id,
-			]);
-		} catch (\Stripe\Exception\CardException $e) {
-			return false;
-		}
+		$customer = \Stripe\Customer::create([
+			'card' => $token,
+			'name' => $user->name,
+			'email' => $user->email,
+			'description' => $user->id,
+		]);
 		$stripe_id = $customer->id;
 		if (!empty($stripe_id)) {
 			$user = User::find(Auth::id());
@@ -100,37 +96,23 @@ class User extends Authenticatable
 		return false;
 	}
 
-	public static function getCustomer($stripe_id) {
-		$user = Auth::user();
-		\Stripe\Stripe::setApiKey(\Config::get('payment.stripe_secret_key'));
-		$customer = null;
-		if (!is_null($user->stripe_id)) {
-			try {
-				$customer = \Stripe\Customer::retrieve($stripe_id, []);
-			} catch (\Stripe\Exception\InvalidRequestException $e) {
-				return false;
-			}
-		}
-		return $customer;
-	}
+	//public static function getCustomer($stripe_id) {
+	//	$user = Auth::user();
+	//	\Stripe\Stripe::setApiKey(\Config::get('payment.stripe_secret_key'));
+	//	$customer = null;
+	//	if (!is_null($user->stripe_id)) {
+	//		$customer = \Stripe\Customer::retrieve($stripe_id, []);
+	//	}
+	//	return $customer;
+	//}
 
 	public static function addCard($stripe_id, $token) {
 		\Stripe\Stripe::setApiKey(\Config::get('payment.stripe_secret_key'));
-		try {
-			\Stripe\Customer::createSource(
-				$stripe_id,
-				['source' => $token,]
-			);
-			return true;
-		} catch (\Stripe\Exception\InvalidRequestException $e) {
-			// Invalid parameters were supplied to Stripe's API
-			//不正なstripe_idの場合nullに変更する
-			$user = User::findOrFail(Auth::id());
-			$user->stripe_id = null;
-			$user->save();
-			return false;
-		}
-		return false;
+		\Stripe\Customer::createSource(
+			$stripe_id,
+			['source' => $token,]
+		);
+		return true;
 	}
 
 	public static function getCards() {
@@ -138,18 +120,13 @@ class User extends Authenticatable
 		$user = Auth::user();
 		$cards = null;
 		if (!is_null($user->stripe_id)) {
-			try {
-				$cards = \Stripe\Customer::allSources(
-				$user->stripe_id,
-					[
-						'object' => 'card',
-						'limit' => 3,
-					]
-				);
-			} catch (\Stripe\Exception\InvalidRequestException $e) {
-				// Invalid parameters were supplied to Stripe's API
-				return false;
-			}
+			$cards = \Stripe\Customer::allSources(
+			$user->stripe_id,
+				[
+					'object' => 'card',
+					'limit' => 3,
+				]
+			);
 		}
 		return $cards;
 	}

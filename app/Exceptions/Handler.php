@@ -76,6 +76,23 @@ class Handler extends ExceptionHandler
 			}
 		}
 
+		$stripe_error_class= [
+			'Stripe\Exception\CardException',
+			'Stripe\Exception\RateLimitException',
+			'Stripe\Exception\InvalidRequestException',
+			'Stripe\Exception\AuthenticationException',
+			'Stripe\Exception\ApiConnectionException',
+			'Stripe\Exception\ApiErrorException',
+		];
+		$class = get_class($exception);
+		if (in_array($class, $stripe_error_class)) {
+			//stripeエラーハンドリング
+			if ($exception instanceof $class) {
+				$error = $exception->getJsonBody()['error'];
+				return redirect()->back()->with('error', trans('stripe.' . $error['code']));
+			}
+		}
+
 		return parent::render($request, $exception);
     }
 	//認証していない場合にガードをみてそれぞれのログインページに飛ばす

@@ -26,7 +26,13 @@
 </a>
 </div>
 @endif
-
+<div class="form-group text-right">
+<a href="{{ route('payments.create') }}">
+<button type="submit" class="btn btn-success btn-sm">
+<font color="white">注文確認へ</font>
+</button>
+</a>
+</div>
 
 @if (!empty($cards->data[0]))
 @foreach ($cards as $key => $card)

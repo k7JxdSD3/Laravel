@@ -62,7 +62,7 @@ class CartController extends Controller {
 		return DB::transaction(function() use($item_id, $user_id, $item_stock, $number_items) {
 			//カート商品削除
 			Cart::where([['item_id', $item_id], ['user_id', $user_id]])->delete();
-			session()->flash('flash_message', '商品を削除しました');
+			session()->flash('success', '商品を削除しました');
 
 			//在庫から削除分をたす
 			$item = Item::find($item_id);
@@ -99,7 +99,7 @@ class CartController extends Controller {
 				['item_id' => $item_id, 'user_id' => $user_id],
 				['number_items' => $number_items + $quantity]
 			);
-			session()->flash('flash_message', '商品を追加しました');
+			session()->flash('success', '商品を追加しました');
 
 			//在庫から追加分を引く
 			$item = Item::find($item_id);
@@ -112,27 +112,27 @@ class CartController extends Controller {
 	public function numberItemDecrease($item_id)
 	{
 		//商品が存在するか確認
-		if (!$item_stock = Item::where('id', $item_id)->value('stock')) {
+		$item_stock = Item::where('id', $item_id)->value('stock');
+		if ($item_stock === null) {
 			return back();
 		}
 
 		$user_id = Auth::user()->id;
 		//既存のカート内の商品数取得
 		$cart = Cart::where([['user_id', $user_id], ['item_id', $item_id]])->first();
-		if ($cart->number_items < 2) {
+		if (!isset($cart->number_items) || $cart->number_items < 2) {
 			return back();
 		}
 
 		return DB::transaction(function() use($item_id, $user_id, $cart, $item_stock) {
 			//商品がcartsテーブルにあれば更新なければ追加
 			$cart = Cart::find($cart->id);
-			$cart->number_items = $cart->number_items - 1;
-			$cart->save();
+			$cart->decrement('number_items');
 
 			//在庫から削除文を足す
 			$item = Item::find($item_id);
-			$item->stock = $item_stock + 1;
-			$item->save();
+			$item->increment('stock');
+			session()->flash('success', '購入数を減らしました');
 			return redirect()->route('cart');
 		});
 	}
@@ -140,27 +140,27 @@ class CartController extends Controller {
 	public function numberItemIncrease($item_id)
 	{
 		//商品が存在するか確認
-		if (!$item_stock = Item::where('id', $item_id)->value('stock')) {
+		$item_stock = Item::where('id', $item_id)->value('stock');
+		if ($item_stock === null) {
 			return back();
 		}
 
 		$user_id = Auth::user()->id;
 		//既存のカート内の商品数取得
 		$cart = Cart::where([['user_id', $user_id], ['item_id', $item_id]])->first();
-		if ($cart->number_items > $item_stock) {
+		if ($item_stock < 1) {
 			return back();
 		}
 
 		return DB::transaction(function() use($item_id, $user_id, $cart, $item_stock) {
 			//商品がcartsテーブルにあれば更新なければ追加
 			$cart = Cart::find($cart->id);
-			$cart->number_items = $cart->number_items + 1;
-			$cart->save();
+			$cart->increment('number_items');
 
 			//在庫から削除文を足す
 			$item = Item::find($item_id);
-			$item->stock = $item_stock - 1;
-			$item->save();
+			$item->decrement('stock');
+			session()->flash('success', '購入数を増やしました');
 			return redirect()->route('cart');
 		});
 	}

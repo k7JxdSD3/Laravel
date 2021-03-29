@@ -19,12 +19,15 @@
 <h3>注文の確認</h3>
 <div class="panel-body">
 
+@if (!empty($address) && !empty($carts) && !empty($default_card->brand))
 <form class="form-horizontal" method="POST" action="{{ route('payments.store') }}">
 {{ csrf_field() }}
+@endif
 <div class="panel panel-default">
 <div class="panel-heading">お届け先住所</div>
 <label>
 <ul style="list-style:none;">
+@if (!empty($address))
 <li>{{ $address->name }}</li>
 <li>〒{{ substr($address->zip, 0, 3) . "-" . substr($address->zip, 3) }}</li>
 <li>{{ $address->prefectures }}</li>
@@ -33,6 +36,11 @@
 <li>電話番号：{{ $address->phone_number }}</li>
 <br>
 <a href="{{ route('address') }}">住所を変更する</a>
+@else
+<li>お届け先が設定されていません</li>
+<br>
+<a href="{{ route('address') }}">お届け先を設定する</a>
+@endif
 </ul>
 </label>
 </div>
@@ -47,6 +55,7 @@
 <a href="{{ route('cards.index') }}">他のカードに変更する</a>
 @else
 <li>クレジットカードが登録されていません</li>
+<br>
 <a href="{{ route('cards.create') }}">クレジットカードを登録する</a>
 @endif
 </ul>
@@ -74,19 +83,22 @@
 </table>
 <p><font size="4">合計金額（税抜き）: ￥{{ $total }}</font></p>
 <p><font size="4">合計金額（税込み）: ￥{{ $including_tax }}</font></p>
+<br>
+<a href="{{ route('cart') }}">カートへ戻る</a>
 @else
 <li>カートに商品がありません</li>
 @endif
 <br>
-<a href="{{ route('cart') }}">カートへ戻る</a>
+<a href="{{ route('items') }}">商品一覧へ</a>
 </ul>
 </div>
 
-
+@if (!empty($address) && !empty($carts) && !empty($default_card->brand))
 <div class="text-center form-group">
 <button type="submit" id="create_token" class="btn btn-primary">注文を確定する</button>
 </div>
 </form>
+@endif
 
 </div>
 </div>

@@ -5,8 +5,15 @@
 <div class="row">
 <div class="col-md-8 col-md-offset-2">
 
-@if ( session('flash_message'))
-<div class="alert alert-success text-center">{{ session('flash_message') }}</div>
+@if (session('success'))
+<div class="alert alert-success text-center">
+{{ session('success') }}
+</div>
+@endif
+@if (session('error'))
+<div class="alert alert-danger text-center">
+{{ session('error') }}
+</div>
 @endif
 
 <a href="{{ route ('address') }}">
@@ -17,15 +24,25 @@
 </div>
 </a>
 
+<a href="{{ route ('payments.create') }}">
+<div class="form-group" align="right">
+<button type="submit" class="btn btn-success">
+<font color="white">注文確認へ</font>
+</button>
+</div>
+</a>
+
 <div class="panel panel-default">
 @if (!empty($carts_data))
-<table class="table">
+<table class="table text-center">
 <tr>
-<th>商品名</th>
-<th>価格</th>
-<th>購入数</th>
-<th>小計</th>
-<th>削除ボタン</th>
+<th class="text-center">商品名</th>
+<th class="text-center">価格</th>
+<th></th>
+<th class="text-center">購入数</th>
+<th class="text-center"></th>
+<th class="text-center">小計</th>
+<th class="text-center">削除ボタン</th>
 </tr>
 @foreach ($carts_data as $cart)
 <tr>
@@ -37,8 +54,12 @@
 <button type="submit" class="btn btn-danger btn-sm">-</button>
 </a>
 @endif
+</td>
+<td>
 <font size="3">{{ $cart['number_items'] }}</font>
-@if ($cart['number_items'] < $cart['item_stock'])
+</td>
+<td>
+@if ($cart['item_stock'] > 0)
 <a href="{{ route('cart.increase', ['item_id' => $cart['item_id']]) }}">
 <button type="submit" class="btn btn-success btn-sm">+</button>
 </a>

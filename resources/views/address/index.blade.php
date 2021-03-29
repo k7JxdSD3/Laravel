@@ -19,6 +19,7 @@
 
 <h2>住所一覧</h2>
 
+@if ($addresses_count < 5)
 <div class="form-group">
 <a href="{{ route('address.add') }}">
 <button type="submit" class="btn btn-primary">
@@ -26,12 +27,22 @@
 </button>
 </a>
 </div>
+@endif
 
 @if (!empty($addresses[0]))
-<form class="form-horizontal" method="POST" action="{{ route('address.default') }}">
+@if (isset($default_address_id))
+<div class="form-group text-right">
+<button type="submit" class="btn btn-success btn-sm">
+<a href="{{ route('payments.create') }}">
+<font color="white">デフォルトの住所でレジへ進む</font>
+</a>
+</button>
+</div>
+@endif
+<form method="POST" action="{{ route('address.default') }}">
 {{ csrf_field() }}
 <div class="form-group text-right">
-<button type="submit" class="btn btn-primary">
+<button type="submit" class="btn btn-primary btn-sm">
 <font color="white">お届け先を指定してレジに進む</font>
 </button>
 </a>

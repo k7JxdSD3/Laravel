@@ -21,19 +21,28 @@ class AddressController extends Controller
 	public function index() {
 		$default_address_id = Auth::user()->address_id;
 		$addresses = $this->address->allGetAddresses();
-		$addresses_count = $this->address->allGetAddressesCount();
-		dd($addresses_count);
-		return view('address.index', compact('addresses', 'default_address_id'));
+		$addresses_count = count($addresses);
+		return view('address.index', compact('addresses', 'default_address_id', 'addresses_count'));
 	}
 
 	// 登録フォーム
 	public function showAddForm() {
+		$addresses_count = $this->address->allGetAddressesCount();
+		if ($addresses_count >= 5) {
+			session()->flash('error', '住所は5件までしか登録できません');
+			return redirect()->route('address');
+		}
 		return view('address.add');
 	}
 
 	// 登録処理
 	//リクエストでバリデーション
 	public function add(AddAddressRequest $request) {
+		$addresses_count = $this->address->allGetAddressesCount();
+		if ($addresses_count >= 5) {
+			session()->flash('error', '住所は5件までしか登録できません');
+			return redirect()->route('address');
+		}
 		//同一住所を確認
 		if ($this->address->findAddress($request)) {
 			session()->flash('error', 'その住所はすでに登録されています');
@@ -84,13 +93,17 @@ class AddressController extends Controller
 		return redirect()->route('address');
 	}
 
-	public static function addDefaultAddress(Request $request) {
+	public function addDefaultAddress(Request $request) {
 		if ($user = User::findOrFail(Auth::user()->id)) {
-			$user->address_id = $request->address_id;
-			$user->save();
-			return redirect()->route('payments.create');
+			$address = $this->address->where('user_id', $user->id)->find($request->address_id);
+			if (isset($address)) {
+				$user->address_id = $request->address_id;
+				$user->save();
+				return redirect()->route('payments.create');
+			}
 		}
-		return false;
+		session()->flash('error', '住所の選択に失敗しました');
+		return redirect()->route('address');
 	}
 }
 

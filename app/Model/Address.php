@@ -41,7 +41,7 @@ class Address extends Model
 		if ($address->user_id == Auth::id()) {
 			return $address;
 		}
-		return false;
+		return null;
 	}
 
 	public function findAddress($request) {

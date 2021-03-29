@@ -33,16 +33,13 @@ class Cart extends Model
 				'name' => $cart->item->name,
 				'price' => $cart->item->price,
 				'item_id' => $cart->item->id,
+				'item_stock' => $cart->item->stock,
 				//小計
 				'subtotal' => $cart->number_items * $cart->item->price,
 			];
 		}
 		return  $carts_data;
 	}
-
-
-
-
 
 }
 
