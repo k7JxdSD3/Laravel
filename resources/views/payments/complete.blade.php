@@ -12,7 +12,7 @@
 <label>
 <ul style="list-style:none;">
 <li>ご注文番号</li>
-<li>{{ $charge_id }}</li>
+<li>{{ $payment_id }}</li>
 </ul>
 </label>
 </div>

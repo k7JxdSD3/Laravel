@@ -131,7 +131,7 @@ class PaymentController extends Controller
 			return redirect()->route('items')->with('error', $error);
 		}
 		$charge_id = $payment->charge_id;
-		return view('payments.complete', compact('charge_id'));
+		return view('payments.complete', compact('payment_id'));
 	}
 
 	/*
