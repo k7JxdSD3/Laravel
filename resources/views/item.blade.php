@@ -91,8 +91,6 @@
 
                 <div class="links">
                     <a href="{{ route('items') }}">商品一覧へ</a>
-                    <a href="{{ route('sns.login', ['provider' => 'twitter']) }}">twitter Login</a>
-                    <a href="{{ route('twitter.search') }}">Tweets Search</a>
                 </div>
             </div>
         </div>

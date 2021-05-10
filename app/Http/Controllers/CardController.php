@@ -42,7 +42,10 @@ class CardController extends Controller
 	public function create()
 	{
 		$cards = $this->card->getCards();
-		$cards_count = count($cards);
+    $cards_count = null;
+    if (isset($cards)) {
+      $cards_count = count($cards);
+    }
 		if ($cards_count >= 3) {
 				$error = 'クレジットカードは3枚までしか登録できません';
 				return redirect()->route('cards.index')->with('error', $error);
@@ -59,10 +62,12 @@ class CardController extends Controller
 	public function store(Request $request)
 	{
 		$cards = $this->card->getCards();
-		$cards_count = count($cards);
-		if ($cards_count >= 3) {
-				$error = 'クレジットカードは3枚までしか登録できません';
-				return redirect()->route('cards.index')->with('error', $error);
+		if (isset($cards)) {
+			$cards_count = count($cards);
+			if ($cards_count >= 3) {
+					$error = 'クレジットカードは3枚までしか登録できません';
+					return redirect()->route('cards.index')->with('error', $error);
+			}
 		}
 		$token = $request->stripeToken;
 		$user = Auth::user();

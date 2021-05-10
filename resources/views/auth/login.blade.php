@@ -43,7 +43,7 @@
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> ログイン状態を保存する
                                     </label>
                                 </div>
                             </div>
@@ -52,17 +52,12 @@
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Login
+                                    ログイン
                                 </button>
 
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     パスワードを忘れた方はこちら
                                 </a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <a href="{{ route('sns.login', ['provider' => 'twitter']) }}"><i class="fab fa-twitter">Twitter Login</i></a>
                             </div>
                         </div>
                     </form>

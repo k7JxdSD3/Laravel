@@ -59,10 +59,12 @@ class PaymentController extends Controller
 		$user = Auth::user();
 		//DBから選択したお届け先住所を取得
 
+		$address = null; 
 		if (isset($user->address_id)) {
 			$address = $this->address->findGet($user->address_id);
 		}
 
+		$default_card = null;
 		if (isset($user->stripe_id)) {
 			//デフォルトのクレジットカードIDを取得
 			$customer = $this->card->getCustomer($user->stripe_id);
