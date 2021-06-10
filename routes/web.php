@@ -22,8 +22,8 @@ Auth::routes();
 
 //ホーム画面
 Route::get('/', function () {
-	return view('item');
-})->name('home');
+	return redirect('/item');
+});
 
 //コントローラーで利用するためnameメソッドをチェーン
 Route::get('/item', 'ItemController@index')->name('items');
